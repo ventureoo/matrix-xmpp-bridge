@@ -1,0 +1,5 @@
+aioxmpp
+matrix-nio
+Pillow
+python-magic
+pytz

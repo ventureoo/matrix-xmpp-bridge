@@ -1,0 +1,12 @@
+matrix:
+  server: "https://matrix.org"
+  user: "@your_matrix_user:matrix.org"
+  password: "YoUr_sEcReT_pAsS"
+  room_id: "!your_matrix_room:matrix.org"
+
+xmpp:
+  jid: "your_xmpp_user@example.org"
+  password: "YoUr_SEcReT_PasS"
+  muc: "your_xmpp_chat_room@coversation.example.org"
+
+
