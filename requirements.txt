@@ -3,3 +3,4 @@ matrix-nio
 Pillow
 python-magic
 pytz
+PyYAML
