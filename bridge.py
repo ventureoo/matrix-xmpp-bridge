@@ -139,7 +139,7 @@ class MatrixClient(BaseClient):
         self.matrix.add_event_callback(self.message_callback, RoomMessageText)
         self.matrix.add_event_callback(self.attachment_callback, RoomMessageMedia)
         self.matrix.add_event_callback(self.redact_callback, RedactionEvent)
-        self.matrix.add_event_callback(self.sticker_callback, RedactionEvent)
+        self.matrix.add_event_callback(self.sticker_callback, StickerEvent)
 
         await self.matrix.sync_forever(timeout=30000, since=self.room, full_state=True)
 
