@@ -169,6 +169,9 @@ class MatrixClient(BaseClient):
         await self.matrix.room_read_markers(room.room_id, event.event_id, event.event_id)
 
     async def attachment_callback(self, room: MatrixRoom, event: RoomMessageMedia):
+        if room.room_id != self.room:
+            return
+
         if event.sender == self.user:
             return
 
