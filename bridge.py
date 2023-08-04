@@ -144,6 +144,9 @@ class MatrixClient(BaseClient):
         await self.matrix.sync_forever(timeout=30000, since=self.room, full_state=True)
 
     async def message_callback(self, room: MatrixRoom, event: RoomMessageText):
+        if room.room_id != self.room:
+            return
+
         if event.sender == self.user:
             if self.pending_id is not None:
                 self.ids_cache.add(event.event_id, self.pending_id)
@@ -176,11 +179,17 @@ class MatrixClient(BaseClient):
         await self.xmpp.send_attachment(url, event.body, room.user_name(event.sender))
 
     async def redact_callback(self, room: MatrixRoom, event: RedactionEvent):
+        if room.room_id != self.room:
+            return
+
         xmpp_id = self.ids_cache.get(event.redacts)
         if xmpp_id is not None:
             await self.xmpp.edit_message(xmpp_id, "This message was deleted by user which sent it")
 
     async def sticker_callback(self, room: MatrixRoom, event: StickerEvent):
+        if room.room_id != self.room:
+            return
+
         url = await self.matrix.mxc_to_http(event.url)
         self.cache.add(event.body, event.event_id)
         self.xmpp.pending_id = event.event_id
