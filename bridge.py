@@ -39,7 +39,7 @@ from aioxmpp.misc.oob import OOBExtension
 from nio import (
     AsyncClient, RoomMessageText, RoomMessageMedia,
     MatrixRoom, UploadResponse, RoomSendResponse,
-    RedactionEvent, LoginResponse, StickerEvent
+    RedactionEvent, LoginResponse
 )
 from PIL import Image
 from datetime import datetime
@@ -139,7 +139,6 @@ class MatrixClient(BaseClient):
         self.matrix.add_event_callback(self.message_callback, RoomMessageText)
         self.matrix.add_event_callback(self.attachment_callback, RoomMessageMedia)
         self.matrix.add_event_callback(self.redact_callback, RedactionEvent)
-        self.matrix.add_event_callback(self.sticker_callback, StickerEvent)
 
         await self.matrix.sync_forever(timeout=30000, since=self.room, full_state=True)
 
@@ -185,15 +184,6 @@ class MatrixClient(BaseClient):
         xmpp_id = self.ids_cache.get(event.redacts)
         if xmpp_id is not None:
             await self.xmpp.edit_message(xmpp_id, "This message was deleted by user which sent it")
-
-    async def sticker_callback(self, room: MatrixRoom, event: StickerEvent):
-        if room.room_id != self.room:
-            return
-
-        url = await self.matrix.mxc_to_http(event.url)
-        self.cache.add(event.body, event.event_id)
-        self.xmpp.pending_id = event.event_id
-        await self.xmpp.send_attachment(url, event.body, room.user_name(event.sender))
 
     def _make_message_content(self, text: str, sender: str):
         content = {"msgtype": "m.text", "body": f"{sender}: {text}"}

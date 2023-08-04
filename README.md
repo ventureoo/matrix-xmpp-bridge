@@ -7,7 +7,6 @@ Was originally written for personal use, so may not be very flexible in configur
 
 - [x] Forwarding simple text messages
 - [x] Forwarding attachments (images/video/files etc.)
-- [x] Forwarding stickers from Matrix to XMPP
 - [x] Deleting messages (only for Matrix -> XMPP, XMPP itself doesn't support deleting messages)
 - [x] Editing messages
 - [x] Replies to messages
