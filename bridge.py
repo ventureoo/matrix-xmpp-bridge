@@ -448,12 +448,17 @@ class XmppClient(BaseClient):
 # Init
 def main():
     config = {}
-    with open("config.yml", "r") as f:
-        try:
-            config = yaml.safe_load(f)
-        except yaml.YAMLError as ex:
-            print("Config parsing error", ex)
-            sys.exit(1)
+    try:
+        with open("config.yml", "r") as f:
+            try:
+                config = yaml.safe_load(f)
+            except yaml.YAMLError as ex:
+                print("Config parsing error", ex)
+                sys.exit(1)
+    except FileNotFoundError:
+        print("Configuration file not found."
+              " Perhaps you forgot to rename it from config.yml.sample to config.yml?")
+        return
 
     cache = Cache(150)
     loop = asyncio.get_event_loop()

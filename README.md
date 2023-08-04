@@ -23,7 +23,7 @@ cd matrix-xmpp-bridge
 pip install -r requirements.txt
 ```
 
-The bot is configured in the ``config.yml`` file. For the bot to work, you must create accounts in Matrix and XMPP respectively,
+The bot is configured in the ``config.yml`` file. You can use ``config.yml.sample`` as an example. For the bot to work, you must create accounts in Matrix and XMPP respectively,
 then specify their login and password in configuration file. You must also join from these accounts to the required rooms, and also specify their address in the config.
 
 IMPORTANT: For Matrix, you must specify the internal ID of the room, not its public address.
