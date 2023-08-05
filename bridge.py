@@ -86,7 +86,7 @@ class BaseClient:
                     self.logger.info(f"Successfully downloaded attachment: {url}")
                 else:
                     self.logger.error(f"Download {url} failed: {resp.reason} {resp.status}")
-                    return
+                    return ()
 
         async with aiofiles.open(path, "wb") as out:
             await out.write(data)
@@ -95,7 +95,7 @@ class BaseClient:
         fstat = await aiofiles.os.stat(path)
         fsize = fstat.st_size
 
-        return path, mime, fsize
+        return (path, mime, fsize)
 
     async def _file_sender(self, fpath):
         async with aiofiles.open(fpath, 'rb') as f:
@@ -234,10 +234,12 @@ class MatrixClient(BaseClient):
             self.logger.error("Error when sending a message", resp)
 
     async def send_attachment(self, url: str, fname: str, sender: str):
-        fpath, mime, fsize = await self.download_attachment(url)
+        fd = await self.download_attachment(url)
 
-        if fpath is None:
+        if not fd:
             self.logger.error("Error while sending an attachment")
+
+        fpath, mime, fsize = fd[0], fd[1], fd[2]
 
         async with aiofiles.open(fpath, "rb+") as f:
             resp, _ = await self.matrix.upload(
@@ -405,10 +407,12 @@ class XmppClient(BaseClient):
                     It is not possible to send attachments from matrix to XMPP.""")
             return
 
-        fpath, mime, fsize = await self.download_attachment(url)
+        fd = await self.download_attachment(url)
 
-        if fpath is None:
+        if not fd:
             self.logger.error("Error while sending an attachment")
+
+        fpath, mime, fsize = fd[0], fd[1], fd[2]
 
         slot = await self.xmpp.send(
             aioxmpp.IQ(
